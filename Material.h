@@ -19,7 +19,7 @@ class Normal : public Material {
         Normal() {}
 
         bool scatter( const Ray &ray, Color3 &attenuation, Ray &scattered, IntersectionManager &intersectionManager ) const override {
-            scattered = Ray( intersectionManager.point, intersectionManager.normal );
+            scattered = Ray( intersectionManager.point, intersectionManager.normal, ray.time() );
             attenuation = 0.5 * Color3( scattered.direction().x() + 1, scattered.direction().y() + 1, scattered.direction().z() + 1 );
         
             return false;
@@ -31,7 +31,7 @@ class Solid : public Material {
         Solid( Color3 color ) : albedo( color ) {}
 
         bool scatter( const Ray &ray, Color3 &attenuation, Ray &scattered, IntersectionManager &intersectionManager ) const override {
-            scattered = Ray( intersectionManager.point, intersectionManager.normal );
+            scattered = Ray( intersectionManager.point, intersectionManager.normal, ray.time() );
             attenuation = albedo;
         
             return false;
@@ -66,7 +66,7 @@ class Diffuse : public Material {
                 reflectedVector = intersectionManager.normal;
             }
             
-            scattered = Ray( intersectionManager.point, reflectedVector );
+            scattered = Ray( intersectionManager.point, reflectedVector, ray.time() );
             attenuation = albedo;
 
             return true;
@@ -88,7 +88,7 @@ class Metal : public Material {
         bool scatter( const Ray &ray, Color3 &attenuation, Ray &scattered, IntersectionManager &intersectionManager ) const override {
             Vector3 reflectedVector = reflected( ray.direction(), intersectionManager.normal );
             reflectedVector = unitVector( reflectedVector ) + ( fuzz * generateRandomUnitVector() );
-            scattered = Ray( intersectionManager.point, reflectedVector );
+            scattered = Ray( intersectionManager.point, reflectedVector, ray.time() );
             attenuation = albedo;
 
             return ( dot( scattered.direction(), intersectionManager.normal ) > 0 );
@@ -141,7 +141,7 @@ class Dielectric : public Material {
                 direction = refract( unitDirection, intersectionManager.normal, rI );
             }
 
-            scattered = Ray( intersectionManager.point, direction );
+            scattered = Ray( intersectionManager.point, direction, ray.time() );
             return true;
         } 
 

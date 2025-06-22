@@ -7,10 +7,13 @@
 class Ray{
     public:
         Ray() {}
-        Ray( const Point3 &origin, const Vector3 &displacement ) : _origin( origin ), _vector( displacement ) {}
+
+        Ray( const Point3 &origin, const Vector3 &displacement, double time ) : _origin( origin ), _vector( displacement ), _time( time ) {}
+        Ray( const Point3 &origin, const Vector3 &displacement ) : Ray( origin, displacement, 0 ) {}
 
         const Point3 &origin() const;
         const Vector3 &direction() const;
+        const double &time() const;
 
         Point3 at( double t ) const;
 
@@ -22,6 +25,7 @@ class Ray{
     private:
         Point3 _origin;
         Vector3 _vector;
+        double _time;
 };
 
 const Point3& Ray::origin() const {
@@ -30,6 +34,10 @@ const Point3& Ray::origin() const {
 
 const Vector3& Ray::direction() const {
     return _vector;
+}
+
+const double& Ray::time() const {
+    return _time;
 }
 
 inline Point3 operator+( const Point3 &point, const Vector3 &vector ) {

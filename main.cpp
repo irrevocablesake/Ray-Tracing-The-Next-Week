@@ -14,7 +14,7 @@ using std::make_shared;
 
 int main(){
     
-    const int IMAGE_WIDTH = 1920;
+    const int IMAGE_WIDTH = 400;
     const double ASPECT_RATIO = 16.0 / 9.0;
     Image image( IMAGE_WIDTH, ASPECT_RATIO );
 
@@ -35,7 +35,10 @@ int main(){
                     // diffuse
                     auto albedo = Color3( generateRandomNumber(), generateRandomNumber(), generateRandomNumber() );
                     sphere_material = make_shared<Diffuse>(albedo);
-                    world.add(make_shared<Sphere>(center, 0.2, sphere_material));
+
+                    Point3 center2 = center + Vector3( 0, generateRandomNumber( 0, 0.5 ), 0 );
+
+                    world.add(make_shared<Sphere>(center, center2, 0.2, sphere_material));
                 } else if (choose_mat < 0.95) {
                     // metal
                     auto albedo = Color3( generateRandomNumber( 0.5, 1 ), generateRandomNumber( 0.5, 1 ), generateRandomNumber( 0.5, 1 ) );
@@ -62,8 +65,8 @@ int main(){
 
     Renderer renderer( world, image );
 
-    renderer.samplesPerPixel = 500;
-    renderer.maxDepth = 50;
+    renderer.samplesPerPixel = 100;
+    renderer.maxDepth = 20;
     renderer.vFOV = 20.0;
     renderer.lookFrom = Point3( 13,2,3 );
     renderer.lookAt = Point3( 0,0,0 );
