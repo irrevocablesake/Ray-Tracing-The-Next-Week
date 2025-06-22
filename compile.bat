@@ -1,0 +1,1 @@
+g++ -std=c++20 Renderer.h Vector3.h Point3.h Dimension3.h Color3.h Ray.h Camera.h Image.h Viewport.h Mesh.h Sphere.h World.h Interval.h Material.h IntersectionManager.h Random.h PixelSampler.h main.cpp -o program
