@@ -21,6 +21,10 @@ inline Vector3 generateRandomVector( double min, double max ){
     return Vector3( generateRandomNumber( min, max ), generateRandomNumber( min, max ), generateRandomNumber( min, max ));
 }
 
+inline int generateRandomInteger( int min, int max ){
+    return int( generateRandomNumber( min, max + 1 ) );
+}
+
 inline Vector3 generateRandomUnitVector(){
     while( true ){
         Vector3 vector = generateRandomVector( -1, 1 );

@@ -14,7 +14,7 @@ using std::make_shared;
 
 int main(){
     
-    const int IMAGE_WIDTH = 400;
+    const int IMAGE_WIDTH = 1920;
     const double ASPECT_RATIO = 16.0 / 9.0;
     Image image( IMAGE_WIDTH, ASPECT_RATIO );
 
@@ -65,8 +65,8 @@ int main(){
 
     Renderer renderer( world, image );
 
-    renderer.samplesPerPixel = 100;
-    renderer.maxDepth = 20;
+    renderer.samplesPerPixel = 500;
+    renderer.maxDepth = 50;
     renderer.vFOV = 20.0;
     renderer.lookFrom = Point3( 13,2,3 );
     renderer.lookAt = Point3( 0,0,0 );

@@ -87,6 +87,8 @@ void Renderer::initialize(){
 
     viewport = Viewport( image, camera );
     pixelSampler = PixelSampler( camera, viewport, samplesPerPixel, maxDepth );
+
+    world.setupAccelerationStructure();
 }
 
 void Renderer::render(){

@@ -4,10 +4,13 @@
 #include "Ray.h"
 #include "Interval.h"
 #include "IntersectionManager.h"
+#include "AABB.h"
 
 class Mesh {
     public: 
-        virtual bool hit( Ray &ray, Interval interval, IntersectionManager &intersectionManager ) const = 0;
-};
+        virtual ~Mesh() = default;
+        virtual bool hit( const Ray &ray, Interval interval, IntersectionManager &intersectionManager ) const = 0;
+        virtual AABB getBoundingBox() const = 0;
+    };
 
 #endif
