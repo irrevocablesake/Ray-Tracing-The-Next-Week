@@ -6,6 +6,9 @@
 #include "IntersectionManager.h"
 #include "Random.h"
 #include "Vector3.h"
+#include "Texture.h"
+
+#include<optional>
 
 class Material {
     public:
@@ -28,27 +31,30 @@ class Normal : public Material {
 
 class Solid : public Material {
     public:
-        Solid( Color3 color ) : albedo( color ) {}
+        Solid( Color3 albedo ) : texture( make_shared< solidColor >( albedo ) ) {}
+
+        //remember this point3 is just a dummy and won't be used
+        Color3 getAlbedo() const {
+            return texture->value( 0, 0, Point3( 0, 0, 0 ));
+        }
 
         bool scatter( const Ray &ray, Color3 &attenuation, Ray &scattered, IntersectionManager &intersectionManager ) const override {
             scattered = Ray( intersectionManager.point, intersectionManager.normal, ray.time() );
-            attenuation = albedo;
+            attenuation = texture -> value( intersectionManager.u, intersectionManager.v, intersectionManager.point );
         
             return false;
         }
 
-        Color3 getAlbedo() const {
-            return albedo;
-        }
-
+       
     private:
-        Color3 albedo;
+        shared_ptr< Texture > texture;
 };
 
 class Diffuse : public Material {
     public:
         Diffuse() {}
-        Diffuse( Color3 color ) : albedo( color ) {}
+        Diffuse( Color3 color ) : texture( make_shared< solidColor >( color ) ) {}
+        Diffuse( shared_ptr< Texture > texture ) : texture( texture ) {} 
 
         Vector3 reflected( const Vector3 &normal ) const{
             Vector3 unitVector = generateRandomUnitVector();
@@ -67,19 +73,20 @@ class Diffuse : public Material {
             }
             
             scattered = Ray( intersectionManager.point, reflectedVector, ray.time() );
-            attenuation = albedo;
+            attenuation = texture -> value( intersectionManager.u, intersectionManager.v, intersectionManager.point );
 
             return true;
         }
 
     private:
-        Color3 albedo;
+        shared_ptr< Texture > texture;
 };
 
 class Metal : public Material {
     public:
 
-        Metal( const Color3 &color, double fuzz ) : albedo( color ), fuzz( fuzz < 1 ? fuzz : 1 ) { }
+        Metal( const Color3 &albedo, double fuzz ) : texture( make_shared< solidColor >( albedo )), fuzz( fuzz < 1 ? fuzz : 1 ) { }
+        Metal( shared_ptr< Texture > texture, double fuzz ) : texture( texture ), fuzz( fuzz < 1 ? fuzz : 1 ) {}
 
         Vector3 reflected( const Vector3 & vector, const Vector3 &normal ) const{
             return vector - 2 * dot( vector, normal ) * normal;
@@ -89,13 +96,13 @@ class Metal : public Material {
             Vector3 reflectedVector = reflected( ray.direction(), intersectionManager.normal );
             reflectedVector = unitVector( reflectedVector ) + ( fuzz * generateRandomUnitVector() );
             scattered = Ray( intersectionManager.point, reflectedVector, ray.time() );
-            attenuation = albedo;
+            attenuation = texture -> value( intersectionManager.u, intersectionManager.v, intersectionManager.point );;
 
             return ( dot( scattered.direction(), intersectionManager.normal ) > 0 );
         }
 
     private:
-        Color3 albedo;
+        shared_ptr< Texture > texture;
         double fuzz;
 };
 

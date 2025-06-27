@@ -2,8 +2,7 @@
 #define INTERVAL_H
 
 #include <limits>
-
-const double INF = std::numeric_limits<double>::infinity();
+#include "constants.h"
 
 class Interval {
     public:

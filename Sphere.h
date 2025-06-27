@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "constants.h"
 
 #include <cmath>
 #include <memory>
@@ -73,10 +74,23 @@ class Sphere : public Mesh{
             intersectionManager.t = root;
             intersectionManager.point = ray.at( intersectionManager.t );
             intersectionManager.material = material;
-            intersectionManager.setFaceNormal( ray, ( intersectionManager.point - positionAtTime ) / radius );
+
+            Vector3 outwardNormal = ( intersectionManager.point - positionAtTime ) / radius;
+            intersectionManager.setFaceNormal( ray, outwardNormal );
+            
+            getSphereUV( outwardNormal, intersectionManager.u, intersectionManager.v );
 
             return true;
         }
+
+        private:
+            static void getSphereUV( const Vector3 &normal, double &u, double &v ){
+                auto theta = std::acos( -normal.y() );
+                auto phi = std::atan2( -normal.z(), normal.x() ) + PI;
+
+                u = phi / ( 2 * PI );
+                v = theta / PI;
+            }
 };
 
 #endif

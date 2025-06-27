@@ -20,6 +20,9 @@ class IntersectionManager{
 
         shared_ptr< Material > material;
 
+        double u;
+        double v;
+
         void setFaceNormal( const Ray &ray, const Vector3 &outwardNormal ){
             frontFace = dot( ray.direction(), outwardNormal ) < 0;
             normal = frontFace ? outwardNormal : -outwardNormal;

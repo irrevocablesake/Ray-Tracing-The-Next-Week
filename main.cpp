@@ -7,20 +7,22 @@
 #include "World.h"
 #include "Sphere.h"
 #include "Random.h"
+#include "Texture.h"
 
 #include <memory>
 
 using std::make_shared;
 
-int main(){
-    
-    const int IMAGE_WIDTH = 1920;
+void classicScene(){
+    const int IMAGE_WIDTH = 400;
     const double ASPECT_RATIO = 16.0 / 9.0;
     Image image( IMAGE_WIDTH, ASPECT_RATIO );
 
     World world;
 
-    auto ground_material = make_shared<Diffuse>(Color3(0.5, 0.5, 0.5));
+    auto checkerTexture = make_shared< CheckerTexture >( 0.32, Color3( .2, .3, .1 ), Color3( .9, .9, .9 ));
+    auto ground_material = make_shared<Diffuse>( checkerTexture );
+
     world.add(make_shared<Sphere>(Point3(0,-1000,0), 1000, ground_material));
 
     for (int a = -11; a < 11; a++) {
@@ -65,8 +67,8 @@ int main(){
 
     Renderer renderer( world, image );
 
-    renderer.samplesPerPixel = 500;
-    renderer.maxDepth = 50;
+    renderer.samplesPerPixel = 50;
+    renderer.maxDepth = 10;
     renderer.vFOV = 20.0;
     renderer.lookFrom = Point3( 13,2,3 );
     renderer.lookAt = Point3( 0,0,0 );
@@ -77,6 +79,72 @@ int main(){
 
     renderer.initialize();
     renderer.render();
+}
 
+void checkerTextureScene(){
+    const int IMAGE_WIDTH = 400;
+    const double ASPECT_RATIO = 16.0 / 9.0;
+    Image image( IMAGE_WIDTH, ASPECT_RATIO );
+
+    World world;
+
+    auto checker = make_shared< CheckerTexture >(0.32, Color3(.2, .3, .1), Color3(.9, .9, .9));
+
+    world.add(make_shared<Sphere>(Point3(0,-10, 0), 10, make_shared<Diffuse>(checker)));
+    world.add(make_shared<Sphere>(Point3(0, 10, 0), 10, make_shared<Diffuse>(checker)));
+
+    Renderer renderer( world, image );
+
+    renderer.samplesPerPixel = 50;
+    renderer.maxDepth = 10;
+    renderer.vFOV = 20.0;
+    renderer.lookFrom = Point3( 13,2,3 );
+    renderer.lookAt = Point3( 0,0,0 );
+    renderer.vUp = Vector3( 0, 1, 0 );
+
+    renderer.defocusAngle = 0;
+    renderer.focusDistance = 10.0;
+
+    renderer.initialize();
+    renderer.render();
+}
+
+void texturedSphere() {
+    const int IMAGE_WIDTH = 400;
+    const double ASPECT_RATIO = 16.0 / 9.0;
+    Image image( IMAGE_WIDTH, ASPECT_RATIO );
+
+    World world;
+
+    auto texture = make_shared< ImageTexture >("wood.jpg");
+    auto surface = make_shared< Diffuse >( texture );
+    auto sphere = make_shared< Sphere >( Point3( 0, 0, 0 ), 2, surface );
+
+    world.add( sphere );
+
+    Renderer renderer( world, image );
+
+    renderer.samplesPerPixel = 50;
+    renderer.maxDepth = 10;
+    renderer.vFOV = 20.0;
+    renderer.lookFrom = Point3( 0,0,12 );
+    renderer.lookAt = Point3( 0,0,0 );
+    renderer.vUp = Vector3( 0, 1, 0 );
+
+    renderer.defocusAngle = 0;
+    renderer.focusDistance = 10.0;
+
+    renderer.initialize();
+    renderer.render();
+}
+
+int main(){
+    
+    switch(2){
+        case 1: classicScene();  break;
+        case 2: checkerTextureScene(); break; 
+        case 3: texturedSphere(); break;
+    }
+    
     return 0;
 }

@@ -6,8 +6,7 @@
 #include "Vector3.h"
 #include "Point3.h"
 #include "Ray.h"
-
-const double PI = 3.1415926535897932385;
+#include "constants.h"
 
 class Viewport {
     public: 
