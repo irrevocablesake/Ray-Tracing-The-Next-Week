@@ -11,18 +11,24 @@ class AABB {
 
         AABB() { }
 
-        AABB( const Interval &x, const Interval &y, const Interval &z  ) : x( x ), y( y ), z( z ) { }
+        AABB( const Interval &x, const Interval &y, const Interval &z  ) : x( x ), y( y ), z( z ) {
+            padBox();
+        }
 
         AABB( const Point3 &a, const Point3 &b ){
             x = ( a.x() < b.x() ) ? Interval( a.x(), b.x() ) : Interval( b.x(), a.x() );
             y = ( a.y() < b.y() ) ? Interval( a.y(), b.y() ) : Interval( b.y(), a.y() );
             z = ( a.z() < b.z() ) ? Interval( a.z(), b.z() ) : Interval( b.z(), a.z() );
+        
+            padBox();
         }
 
         AABB( const AABB &box0, const AABB &box1 ){
             x = Interval( box0.x, box1.x );
             y = Interval( box0.y, box1.y );
             z = Interval( box0.z, box1.z );
+
+            padBox();
         }
 
         const Interval &getIntervalForAxis( int n ) const {
@@ -68,6 +74,15 @@ class AABB {
         }
 
         static const AABB empty, universe;
+
+    private:
+        void padBox(){
+            double delta = 0.0001;
+
+            if( x.size() < delta ) x = x.expand( delta );
+            if( y.size() < delta ) y = y.expand( delta );
+            if( z.size() < delta ) z = z.expand( delta );
+        }
 };
 
 const AABB AABB::empty = AABB( Interval::empty, Interval::empty, Interval::empty );

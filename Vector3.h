@@ -41,7 +41,7 @@ Vector3 Vector3::operator-() const{
     return Vector3( -x(), -y(), -z() );
 }
 
-inline double dot( const Vector3 &dimension0, const Vector3 &dimension1 ){
+inline double dot( const Vector3 dimension0, const Vector3 dimension1 ){
   return dimension0.x() * dimension1.x() + dimension0.y() * dimension1.y() + dimension0.z() * dimension1.z();
 }
 

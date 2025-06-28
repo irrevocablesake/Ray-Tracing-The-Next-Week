@@ -8,6 +8,7 @@
 #include "Sphere.h"
 #include "Random.h"
 #include "Texture.h"
+#include "shapes2D.h"
 
 #include <memory>
 
@@ -138,12 +139,56 @@ void texturedSphere() {
     renderer.render();
 }
 
+void parallelogramScene() {
+    const int IMAGE_WIDTH = 400;
+    const double ASPECT_RATIO = 1.0;
+    Image image( IMAGE_WIDTH, ASPECT_RATIO );
+
+    World world;
+
+    auto leftMaterial     = make_shared<Diffuse>(Color3(1.0, 0.2, 0.2));
+    auto backMaterial   = make_shared<Diffuse>(Color3(0.2, 1.0, 0.2));
+    auto rightMaterial   = make_shared<Diffuse>(Color3(0.2, 0.2, 1.0));
+    auto upMaterial = make_shared<Diffuse>(Color3(1.0, 0.5, 0.0));
+    auto downMaterial   = make_shared<Diffuse>(Color3(0.2, 0.8, 0.8));
+
+    auto leftMesh = make_shared< Parallelogram >( Point3(-3,-2, 5), Vector3(0, 0,-4), Vector3(0, 4, 0), leftMaterial );
+    auto backMesh = make_shared< Parallelogram >(Point3(-2,-2, 0), Vector3(4, 0, 0), Vector3(0, 4, 0), backMaterial);
+    auto rightMesh = make_shared< Parallelogram >(Point3( 3,-2, 1), Vector3(0, 0, 4), Vector3(0, 4, 0), rightMaterial);
+    auto upMesh = make_shared< Parallelogram >(Point3(-2, 3, 1), Vector3(4, 0, 0), Vector3(0, 0, 4), upMaterial);
+    auto downMesh = make_shared< Parallelogram >(Point3(-2,-3, 5), Vector3(4, 0, 0), Vector3(0, 0,-4), downMaterial);
+
+    world.add( leftMesh );
+    world.add( backMesh );
+    world.add( rightMesh );
+    world.add( upMesh );
+    world.add( downMesh );
+
+    Renderer renderer( world, image );
+
+    renderer.samplesPerPixel = 100;
+    renderer.maxDepth = 50;
+    renderer.vFOV = 80.0;
+    renderer.lookFrom = Point3( 0,0,9 );
+    renderer.lookAt = Point3( 0,0,0 );
+    renderer.vUp = Vector3( 0, 1, 0 );
+
+    renderer.defocusAngle = 0;
+    renderer.focusDistance = 10.0;
+
+    renderer.initialize();
+    renderer.render();
+}
+
 int main(){
     
-    switch(2){
+    int scene = 4;
+
+    switch( scene ){
         case 1: classicScene();  break;
         case 2: checkerTextureScene(); break; 
         case 3: texturedSphere(); break;
+        case 4: parallelogramScene(); break;
     }
     
     return 0;
