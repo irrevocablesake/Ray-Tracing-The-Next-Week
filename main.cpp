@@ -264,6 +264,55 @@ void emptyCornellBox(){
     renderer.render();
 }
 
+void dualLightemptyCornellBox(){
+    const int IMAGE_WIDTH = 400;
+    const double ASPECT_RATIO = 1.0;
+    Image image( IMAGE_WIDTH, ASPECT_RATIO );
+
+    World world;
+
+    auto redMaterial = make_shared< Diffuse >( Color3( .65, .05, .05 ) );
+    auto whiteMaterial = make_shared< Diffuse >( Color3( .73, .73, .73 ) );
+    auto greenMaterial = make_shared< Diffuse >( Color3( .12, .45, .15 ) );
+
+    auto lightRedEmissiveMaterial = make_shared< Light >( Color3( 1.0, 0.0, 0.0 ) );
+    auto lightBlueEmissiveMaterial = make_shared< Light >( Color3( 0.0, 0.0, 1.0 ) );
+
+    auto leftWall = make_shared< Parallelogram >( Point3( 555, 0, 0 ), Vector3( 0, 555, 0 ), Vector3( 0, 0, 555 ), greenMaterial );
+    auto rightWall = make_shared< Parallelogram >( Point3( 0, 0, 0 ), Vector3( 0, 555, 0 ), Vector3( 0, 0, 555 ), redMaterial );
+    auto backWall = make_shared< Parallelogram >( Point3( 0, 0, 555 ), Vector3( 555, 0, 0 ), Vector3( 0, 555, 0 ), whiteMaterial );
+    auto topWall = make_shared< Parallelogram >( Point3( 0, 0, 0 ), Vector3( 555, 0, 0 ), Vector3( 0, 0, 555 ), whiteMaterial );
+    auto bottomWall = make_shared< Parallelogram >( Point3( 555, 555, 555 ), Vector3( -555, 0, 0 ), Vector3( 0, 0, -555 ), whiteMaterial );
+
+    auto redLight = make_shared< Parallelogram >( Point3(171.5, 554, 332), Vector3(-130,0,0), Vector3(0,0,-105), lightRedEmissiveMaterial );
+    auto blueLight = make_shared< Parallelogram >( Point3( 514.5, 554, 332 ), Vector3( -130, 0, 0 ), Vector3( 0, 0, -105 ), lightBlueEmissiveMaterial );
+
+    world.add( leftWall );
+    world.add( rightWall );
+    world.add( topWall );
+    world.add( backWall );
+    world.add( bottomWall );
+
+    world.add( redLight );
+    world.add( blueLight );
+
+    Renderer renderer( world, image );
+
+    renderer.samplesPerPixel = 50;
+    renderer.maxDepth = 5;
+    renderer.vFOV = 40.0;
+    renderer.lookFrom = Point3( 278, 278, -800 );
+    renderer.lookAt = Point3( 278,278,0 );
+    renderer.vUp = Vector3( 0, 1, 0 );
+    renderer.background = Color3( 0.0, 0.0, 0.0 );
+
+    renderer.defocusAngle = 0;
+    renderer.focusDistance = 10.0;
+
+    renderer.initialize();
+    renderer.render();
+}
+
 int main(){
     
     int scene = 6;
@@ -275,6 +324,7 @@ int main(){
         case 4: parallelogramScene(); break;
         case 5: lightScene(); break;
         case 6: emptyCornellBox(); break;
+        case 7: dualLightemptyCornellBox(); break;
     }
     
     return 0;
