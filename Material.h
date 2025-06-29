@@ -14,7 +14,13 @@ class Material {
     public:
         virtual ~Material() = default;
 
-        virtual bool scatter( const Ray &ray, Color3 &attenuation, Ray &scattered, IntersectionManager &intersectionManager ) const = 0;
+        virtual bool scatter( const Ray &ray, Color3 &attenuation, Ray &scattered, IntersectionManager &intersectionManager ) const {
+            return false;
+        }
+
+        virtual Color3 emitted( double u, double v, const Point3 &point ) const {
+            return Color3( 0, 0, 0 );
+        }
 };
 
 class Normal : public Material {
@@ -154,6 +160,19 @@ class Dielectric : public Material {
 
     private:
         double refractionIndex;
+};
+
+class Light : public Material {
+    public:
+        Light( shared_ptr< Texture > texture ) : texture( texture ) {}
+        Light( const Color3 emit ) : texture( make_shared< solidColor >( emit )) {}
+
+        Color3 emitted( double u, double v, const Point3 &point ) const override {
+            return texture -> value( u, v, point );
+        }
+
+    private:
+        shared_ptr< Texture > texture;
 };
 
 #endif

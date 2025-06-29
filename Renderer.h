@@ -31,6 +31,7 @@ class Renderer{
         Vector3 vUp{ 0, 1, 0 };
         float defocusAngle = 1.0;
         float focusDistance = 1.0;
+        Color3 background = Color3( 1.0, 0.0, 0.0 );
 
     public: 
         Renderer( const World &world, const Image &image ) : world( world ), image( image ) {}
@@ -86,7 +87,7 @@ void Renderer::initialize(){
     }
 
     viewport = Viewport( image, camera );
-    pixelSampler = PixelSampler( camera, viewport, samplesPerPixel, maxDepth );
+    pixelSampler = PixelSampler( camera, viewport, samplesPerPixel, maxDepth, background );
 
     world.setupAccelerationStructure();
 }

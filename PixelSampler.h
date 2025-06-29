@@ -18,6 +18,7 @@ class PixelSampler{
     public:
         int samplesPerPixel;
         int maxDepth;
+        Color3 background;
 
     public:
         double average;
@@ -25,7 +26,7 @@ class PixelSampler{
         Camera camera;
 
         PixelSampler() {} 
-        PixelSampler( Camera &camera, Viewport &viewport, int samplesPerPixel, int maxDepth ) : camera( camera ), viewport( viewport ), samplesPerPixel( samplesPerPixel ), maxDepth( maxDepth ) {
+        PixelSampler( Camera &camera, Viewport &viewport, int samplesPerPixel, int maxDepth, Color3 &background ) : camera( camera ), viewport( viewport ), samplesPerPixel( samplesPerPixel ), maxDepth( maxDepth ), background( background ) {
             average = 1 / double( samplesPerPixel );
         }
 
@@ -40,11 +41,6 @@ Color3 PixelSampler::processPixelColor( Ray &ray, World &world, int maxDepth ){
     if( maxDepth <= 0 ){
         return Color3( 0, 0, 0 );
     }
-
-    Color3 white( 1.0, 1.0, 1.0 );
-    Color3 blue( 0.5, 0.7, 1.0 );
-    Color3 red( 1.0, 0.0, 0.0 );
-    Color3 black( 0.0, 0.0, 0.0 );
 
     IntersectionManager intersectionManager;
 
@@ -67,17 +63,32 @@ Color3 PixelSampler::processPixelColor( Ray &ray, World &world, int maxDepth ){
         Ray scattered;
         Color3 attenuation;
 
+        Color3 emittedColor = intersectionManager.material -> emitted( intersectionManager.u, intersectionManager.v, intersectionManager.point );
+
         if( intersectionManager.material -> scatter( ray, attenuation, scattered, intersectionManager ) ){
             Color3 value = processPixelColor( scattered, world, maxDepth - 1 );
-            return attenuation * value;
+            
+            return emittedColor + ( attenuation * value );
         }
-        return Color3( 0, 0, 0 );
+        return emittedColor;
     }
 
-    Vector3 normalizedDirection = normalizeVector( unitVector( ray.direction() ) );
-    Color3 color = lerpColor( white, blue, normalizedDirection.y() );
-    
-    return color;
+    return background;
+
+    //--
+
+    // if( !hit ) return background;
+
+    // Ray scattered;
+    // Color3 attenuation;
+    // Color3 emittedColor = intersectionManager.material -> emitted( intersectionManager.u, intersectionManager.v, intersectionManager.point );
+
+    // if( !intersectionManager.material -> scatter( ray, attenuation, scattered, intersectionManager ) ) return emittedColor;
+
+    // Color3 value = processPixelColor( scattered, world, maxDepth - 1 );
+    // Color3 scatteredColor = attenuation * value;
+
+    // return emittedColor + scatteredColor;
 }
 
 Vector3 PixelSampler::sample() {
