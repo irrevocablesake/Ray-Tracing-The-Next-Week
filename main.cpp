@@ -96,8 +96,8 @@ void checkerTextureScene(){
 
     Renderer renderer( world, image );
 
-    renderer.samplesPerPixel = 50;
-    renderer.maxDepth = 10;
+    renderer.samplesPerPixel = 100;
+    renderer.maxDepth = 50;
     renderer.vFOV = 20.0;
     renderer.lookFrom = Point3( 13,2,3 );
     renderer.lookAt = Point3( 0,0,0 );
@@ -105,6 +105,7 @@ void checkerTextureScene(){
 
     renderer.defocusAngle = 0;
     renderer.focusDistance = 10.0;
+    renderer.background = Color3( 0.70, 0.80, 1.00 );
 
     renderer.initialize();
     renderer.render();
@@ -131,6 +132,7 @@ void texturedSphere() {
     renderer.lookFrom = Point3( 0,0,12 );
     renderer.lookAt = Point3( 0,0,0 );
     renderer.vUp = Vector3( 0, 1, 0 );
+    renderer.background = Color3( 0, 0, 0 );
 
     renderer.defocusAngle = 0;
     renderer.focusDistance = 10.0;
@@ -181,18 +183,23 @@ void parallelogramScene() {
 }
 
 void lightScene() {
-    const int IMAGE_WIDTH = 400;
+    const int IMAGE_WIDTH = 1280;
     const double ASPECT_RATIO = 16.0 / 9.0;
     Image image( IMAGE_WIDTH, ASPECT_RATIO );
 
     World world;
 
-    auto earthTexture = make_shared< ImageTexture >("earth.jpg");
+    // auto earthTexture = make_shared< ImageTexture >("earth.jpg");
     world.add(make_shared<Sphere>(Point3(0,-1000,0), 1000, make_shared<Diffuse>( Color3( 1.0, 1.0, 1.0  ))));
     world.add(make_shared<Sphere>(Point3(0,2,0), 2, make_shared<Diffuse>( Color3( 1.0, 1.0, 1.0 ))));
 
-    auto light = make_shared< Light >(Color3(4,4,4));
-    world.add(make_shared< Parallelogram >(Point3(3,1,-1), Vector3(2,0,0), Vector3(0,2,0), light));
+    // auto checker = make_shared< CheckerTexture >( 0.32, Color3(1, 0, 0), Color3(0,0,1) );
+
+    auto blueLight = make_shared< Light >( Color3( 0.0, 0.0, 0.5 ));
+    auto redLight = make_shared< Light >( Color3( 0.5, 0.0, 0.0 ) );
+
+    world.add(make_shared< Parallelogram >(Point3(3,1,-2), Vector3(2,0,0), Vector3(0,2,0), redLight));
+    world.add(make_shared< Sphere >(Point3(0,6,0), 1, blueLight ));
 
     Renderer renderer( world, image );
 

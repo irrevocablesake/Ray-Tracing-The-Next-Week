@@ -62,17 +62,12 @@ class Diffuse : public Material {
         Diffuse( Color3 color ) : texture( make_shared< solidColor >( color ) ) {}
         Diffuse( shared_ptr< Texture > texture ) : texture( texture ) {} 
 
-        Vector3 reflected( const Vector3 &normal ) const{
-            Vector3 unitVector = generateRandomUnitVector();
-            if( dot( unitVector, normal ) > 0.0 ){
-                return unitVector;
-            }
-            
-            return -unitVector;
+        Vector3 reflected() const{
+           return generateRandomUnitVector();
         }
 
         bool scatter( const Ray &ray, Color3 &attenuation, Ray &scattered, IntersectionManager &intersectionManager ) const override {
-            Vector3 reflectedVector = intersectionManager.normal + reflected( intersectionManager.normal );
+            Vector3 reflectedVector = intersectionManager.normal + reflected();
 
             if( reflectedVector.nearZero() ){
                 reflectedVector = intersectionManager.normal;
