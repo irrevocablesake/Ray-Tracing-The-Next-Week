@@ -1,7 +1,7 @@
 # Ray Tracer The Next Week
 
 <p align="center">
-  <img src="images/hero/render.png" width="80%"/>
+  <img src="images/render/heroRender" width="80%"/>
   <br>
   <em>A Hero Render</em>
 </p>
@@ -28,12 +28,12 @@ This is an improved version of [Ray Tracer In One Weekend](https://github.com/ir
 
 Lights, in addition to the global illumination, there are proper light sources. This has been implemented as a Material, so all one has to do is create a geometry and just apply the material and viola ~ it will shine bright :)
 
-For a more white colour light, please see the next Cornell Box example
+In this example, we have used 2 lights, red light and blue light but one can see a purplish light can be seen on the floor due to the nature of interaction of light. For a more white colour light, please see the next Cornell Box example
 
 <p align="center">
   <img src="images/render/ColouredLightsScene.png" width="80%"/>
   <br>
-  <em>A Hero Render</em>
+  <em>Red Blue Lights</em>
 </p>
 
 ### Cornell Box
