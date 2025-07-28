@@ -1,10 +1,4 @@
-# Ray Tracer The Next Week
-
-<p align="center">
-  <img src="images/render/heroRender" width="80%"/>
-  <br>
-  <em>A Hero Render</em>
-</p>
+# Ray Tracer The Next Week ( WIP )
 
 This is an improved version of [Ray Tracer In One Weekend](https://github.com/irrevocablesake/Ray-Tracer-In-a-Weekend). It's still a WIP, but the so far completed features are as follows:
 
@@ -43,7 +37,7 @@ In this example, we have used 2 lights, red light and blue light but one can see
   <tbody>
     <tr>
       <td >
-        <img src="images/render/cornellBox.png" width="100%">
+        <img src="images/render/emptyCornellBox.png" width="100%">
         <p style="text-align: center; font-style: italic; font-size: 14px; color: #555;">
           Cornell Box
         </p>
