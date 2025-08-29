@@ -8,7 +8,7 @@
 #include "Sphere.h"
 #include "Random.h"
 #include "Texture.h"
-#include "shapes2D.h"
+#include "Parallelogram.h"
 
 #include <memory>
 
