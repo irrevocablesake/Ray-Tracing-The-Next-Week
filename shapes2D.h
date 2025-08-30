@@ -14,7 +14,7 @@
 
 using std::shared_ptr;
 
-class shape2D : public Mesh {
+class shape2D : public Primitive {
     public:
         virtual bool inShape( double alpha, double beta, IntersectionManager &intersectionManager ) const = 0;
 };

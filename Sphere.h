@@ -12,7 +12,7 @@
 using std::shared_ptr;
 using std::make_shared;
 
-class Sphere : public Mesh{
+class Sphere : public Primitive {
     public:  
 
         Ray position;

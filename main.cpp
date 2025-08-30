@@ -9,6 +9,7 @@
 #include "Random.h"
 #include "Texture.h"
 #include "Parallelogram.h"
+#include "Box.h"
 
 #include <memory>
 
@@ -192,6 +193,7 @@ void lightScene() {
     // auto earthTexture = make_shared< ImageTexture >("earth.jpg");
     world.add(make_shared<Sphere>(Point3(0,-1000,0), 1000, make_shared<Diffuse>( Color3( 1.0, 1.0, 1.0  ))));
     world.add(make_shared<Sphere>(Point3(0,2,0), 2, make_shared<Diffuse>( Color3( 1.0, 1.0, 1.0 ))));
+    world.add( make_shared< Box >( Point3( 0, 0, 0 ), Point3( 1, 1, 1 ), make_shared< Diffuse >( Color3( 0.5, 0.5, 0.0 ))));
 
     // auto checker = make_shared< CheckerTexture >( 0.32, Color3(1, 0, 0), Color3(0,0,1) );
 
@@ -203,8 +205,8 @@ void lightScene() {
 
     Renderer renderer( world, image );
 
-    renderer.samplesPerPixel = 100;
-    renderer.maxDepth = 50;
+    renderer.samplesPerPixel = 10;
+    renderer.maxDepth = 10;
     renderer.vFOV = 20.0;
     renderer.lookFrom = Point3( 26, 3, 6 );
     renderer.lookAt = Point3( 0,2,0 );
@@ -239,6 +241,10 @@ void emptyCornellBox(){
 
     auto light = make_shared< Parallelogram >( Point3(343, 554, 332), Vector3(-130,0,0), Vector3(0,0,-105), lightEmissiveMaterial );
 
+    
+    world.add( make_shared< Box >( Point3( 130, 0, 65 ), Point3( 295, 165, 230 ), make_shared< Diffuse >( Color3( 1.0, 1.0, 1.0 ))));
+    world.add( make_shared< Box >( Point3( 265, 0, 295 ), Point3( 430, 330, 460 ), make_shared< Diffuse >( Color3( 1.0, 1.0, 1.0 ))));
+
     world.add( leftWall );
     world.add( rightWall );
     world.add( topWall );
@@ -249,8 +255,8 @@ void emptyCornellBox(){
 
     Renderer renderer( world, image );
 
-    renderer.samplesPerPixel = 50;
-    renderer.maxDepth = 5;
+    renderer.samplesPerPixel = 100;
+    renderer.maxDepth = 50;
     renderer.vFOV = 40.0;
     renderer.lookFrom = Point3( 278, 278, -800 );
     renderer.lookAt = Point3( 278,278,0 );
@@ -313,9 +319,41 @@ void dualLightemptyCornellBox(){
     renderer.render();
 }
 
+void simpleBoxMesh(){
+    const int IMAGE_WIDTH = 1280;
+    const double ASPECT_RATIO = 16.0 / 9.0;
+    Image image( IMAGE_WIDTH, ASPECT_RATIO );
+
+    World world;
+
+    world.add(make_shared<Sphere>(Point3(0,-1000,0), 1000, make_shared<Diffuse>( Color3( 1.0, 1.0, 1.0  ))));
+    world.add( make_shared< Box >( Point3( 0, 0, 0 ), Point3( 2, 2, 2 ), make_shared< Diffuse >( Color3( 1.0, 1.0, 0.0 ))));
+
+    auto whiteLight = make_shared< Light >( Color3( 4.0, 4.0, 4.0 ) );
+
+    world.add(make_shared< Parallelogram >(Point3(3,1,-2), Vector3(2,0,0), Vector3(0,2,0), whiteLight));
+    world.add(make_shared< Sphere >(Point3(0,4,0), 1, whiteLight ));
+
+    Renderer renderer( world, image );
+
+    renderer.samplesPerPixel = 5;
+    renderer.maxDepth = 10;
+    renderer.vFOV = 20.0;
+    renderer.lookFrom = Point3( 26, 3, 6 );
+    renderer.lookAt = Point3( 0,2,0 );
+    renderer.vUp = Vector3( 0, 1, 0 );
+    renderer.background = Color3( 0.0, 0.0, 0.0 );
+
+    renderer.defocusAngle = 0;
+    renderer.focusDistance = 10.0;
+
+    renderer.initialize();
+    renderer.render();
+}
+
 int main(){
     
-    int scene = 6;
+    int scene = 8;
 
     switch( scene ){
         case 1: classicScene();  break;
@@ -325,6 +363,7 @@ int main(){
         case 5: lightScene(); break;
         case 6: emptyCornellBox(); break;
         case 7: dualLightemptyCornellBox(); break;
+        case 8: simpleBoxMesh(); break;
     }
     
     return 0;

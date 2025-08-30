@@ -31,6 +31,14 @@ class AABB {
             padBox();
         }
 
+        void mergeBoundingBox( const AABB &box ){
+            x = Interval( x, box.x );
+            y = Interval( y, box.y );
+            z = Interval( z, box.z );
+
+            padBox();
+        }
+
         const Interval &getIntervalForAxis( int n ) const {
             if( n == 1 ) return y;
             if( n == 2 ) return z;
