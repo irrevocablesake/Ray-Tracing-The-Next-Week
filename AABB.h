@@ -96,4 +96,8 @@ class AABB {
 const AABB AABB::empty = AABB( Interval::empty, Interval::empty, Interval::empty );
 const AABB AABB::universe = AABB( Interval::universe, Interval:: universe, Interval::universe );
 
+AABB operator+( const AABB &boundingBox, const Vector3 offset ){
+    return AABB( boundingBox.x + offset.x(), boundingBox.y + offset.y(), boundingBox.z + offset.z() );
+}
+
 #endif

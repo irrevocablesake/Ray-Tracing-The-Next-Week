@@ -20,9 +20,9 @@ using std::make_shared;
 
 class BVHNode {
     public:
-        using nodeType = std::variant< shared_ptr< BVHNode >, shared_ptr< Primitive > >;
+        using nodeType = std::variant< shared_ptr< BVHNode >, shared_ptr< Mesh >>;
 
-        BVHNode( vector< shared_ptr< Primitive > > &objects, size_t start, size_t end ){
+        BVHNode( vector< shared_ptr< Mesh > > &objects, size_t start, size_t end ){
             
             boundingBox = AABB::empty;
             for( size_t index = start; index < end; index++ ){
@@ -31,7 +31,7 @@ class BVHNode {
 
             int axis = boundingBox.getLongestAxis();
 
-            auto comparator = static_cast<bool (*)(shared_ptr<Primitive>, shared_ptr<Primitive>)>(nullptr);
+            auto comparator = static_cast<bool (*)(shared_ptr<Mesh>, shared_ptr<Mesh>)>(nullptr);
 
             if( axis == 0 ){
                 comparator = boxXCompare;
@@ -46,7 +46,8 @@ class BVHNode {
             size_t numberOfObjects = end - start;
 
             if( numberOfObjects == 1 ){
-                left = right = objects[start];
+                left = right = objects[ start ];
+              
             }
             else if( numberOfObjects == 2 ){
                 left = objects[ start ];
@@ -60,6 +61,8 @@ class BVHNode {
                 right = make_shared< BVHNode >( objects, mid, end );
             }
        }
+
+
 
        //also we can add a different way of doing this, basically a hold_alternative to check what type it is holding, in case the parameters are different
         bool nodeTypeHit( const nodeType &child, const Ray &ray, Interval interval, IntersectionManager &intersectionManager ) const {
@@ -90,22 +93,22 @@ class BVHNode {
             return std::visit([](auto&& obj) { return obj->getBoundingBox(); }, child);
         }
 
-        static bool boxCompare( const shared_ptr< Primitive > a, const shared_ptr< Primitive > b, int axis ){
+        static bool boxCompare( const shared_ptr< Mesh > a, const shared_ptr< Mesh > b, int axis ){
             Interval aAxisInterval = a -> getBoundingBox().getIntervalForAxis( axis );
             Interval bAxisInterval = b -> getBoundingBox().getIntervalForAxis( axis );
 
             return aAxisInterval.min < bAxisInterval.min;
         }
 
-        static bool boxXCompare( const shared_ptr< Primitive > a, const shared_ptr< Primitive > b ){
+        static bool boxXCompare( const shared_ptr< Mesh > a, const shared_ptr< Mesh > b ){
             return boxCompare( a, b, 0 );
         }
 
-        static bool boxYCompare( const shared_ptr< Primitive > a, const shared_ptr< Primitive > b ){
+        static bool boxYCompare( const shared_ptr< Mesh > a, const shared_ptr< Mesh > b ){
             return boxCompare( a, b, 1 );
         }
 
-        static bool boxZCompare( const shared_ptr< Primitive > a, const shared_ptr< Primitive > b ){
+        static bool boxZCompare( const shared_ptr< Mesh > a, const shared_ptr< Mesh > b ){
             return boxCompare( a, b, 2 );
         }
 };

@@ -16,7 +16,7 @@ using std::make_shared;
 
 class World{
     public:
-        std::vector< shared_ptr< Primitive > > meshList;
+        std::vector< shared_ptr< Mesh > > meshList;
         shared_ptr< BVHNode > tree;
 
         World() {}
@@ -26,20 +26,8 @@ class World{
         }
 
         void add( shared_ptr< Mesh > mesh ){
-            if( auto box = std::dynamic_pointer_cast<Box>( mesh) ){
-                auto faces = box -> getFaces();
-
-                for( auto &face : faces ){
-                    meshList.push_back( face );
-                    boundingBox = AABB( boundingBox, face -> getBoundingBox() );
-                }
-            }
-            else{
-                auto castedPrimitive = std::dynamic_pointer_cast<Primitive>( mesh );
-
-                meshList.push_back( castedPrimitive );
-                boundingBox = AABB( boundingBox, castedPrimitive -> getBoundingBox() );
-            }
+            meshList.push_back( mesh );
+            boundingBox = AABB( boundingBox, mesh -> getBoundingBox() );
         }
 
         bool raycast( Ray &ray, Interval interval, IntersectionManager &intersectionManager ){
