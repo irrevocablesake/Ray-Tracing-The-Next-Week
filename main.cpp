@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "Parallelogram.h"
 #include "Box.h"
+#include "Transformations.h"
 
 #include <memory>
 
@@ -327,12 +328,19 @@ void simpleBoxMesh(){
     World world;
 
     world.add(make_shared<Sphere>(Point3(0,-1000,0), 1000, make_shared<Diffuse>( Color3( 1.0, 1.0, 1.0  ))));
-    world.add( make_shared< Box >( Point3( 0, 0, 0 ), Point3( 2, 2, 2 ), make_shared< Diffuse >( Color3( 1.0, 1.0, 0.0 ))));
+    // world.add( make_shared< Box >( Point3( 0, 0, 0 ), Point3( 2, 2, 2 ), make_shared< Diffuse >( Color3( 1.0, 1.0, 0.0 ))));
 
     auto whiteLight = make_shared< Light >( Color3( 4.0, 4.0, 4.0 ) );
 
     world.add(make_shared< Parallelogram >(Point3(3,1,-2), Vector3(2,0,0), Vector3(0,2,0), whiteLight));
     world.add(make_shared< Sphere >(Point3(0,4,0), 1, whiteLight ));
+
+    std::shared_ptr< Mesh > box = make_shared< Box >( Point3( 0, 0, 0 ), Point3( 2, 2, 2 ), make_shared< Diffuse >( Color3( 1.0, 1.0, 0.0 )));
+    box = make_shared< Translate >( box, Vector3( -1, -1, -1 ) );
+    box = make_shared< RotateY >( box, 90 );
+    box = make_shared< Translate >( box, Vector3( 1, 1, 1 ) );
+
+    world.add( box );
 
     Renderer renderer( world, image );
 
