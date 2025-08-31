@@ -170,4 +170,20 @@ class Light : public Material {
         shared_ptr< Texture > texture;
 };
 
+class Isotropic : public Material {
+    public:
+        Isotropic( const Color3 &albedo ) : texture( make_shared< solidColor >( albedo ) ) { }
+        Isotropic( shared_ptr< Texture > texture ) : texture( texture ) {}
+
+        bool scatter( const Ray &ray, Color3 &attenuation, Ray &scattered, IntersectionManager &intersectionManager ) const override {
+            scattered = Ray( intersectionManager.point, generateRandomUnitVector(), ray.time() );
+            attenuation = texture -> value( intersectionManager.u, intersectionManager.v, intersectionManager.point );
+
+            return true;
+        }
+
+    private:
+        shared_ptr< Texture > texture;
+};
+
 #endif

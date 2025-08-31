@@ -11,6 +11,8 @@
 #include "Parallelogram.h"
 #include "Box.h"
 #include "Transformations.h"
+#include "Material.h"
+#include "Fog.h"
 
 #include <memory>
 
@@ -339,13 +341,14 @@ void simpleBoxMesh(){
     box = make_shared< Translate >( box, Vector3( -1, -1, -1 ) );
     box = make_shared< RotateY >( box, 90 );
     box = make_shared< Translate >( box, Vector3( 1, 1, 1 ) );
+    box = make_shared< Fog >( box, 0.1, make_shared< Isotropic >( Color3( 1, 0, 0 ) ) );
 
     world.add( box );
 
     Renderer renderer( world, image );
 
-    renderer.samplesPerPixel = 5;
-    renderer.maxDepth = 10;
+    renderer.samplesPerPixel = 200;
+    renderer.maxDepth = 50;
     renderer.vFOV = 20.0;
     renderer.lookFrom = Point3( 26, 3, 6 );
     renderer.lookAt = Point3( 0,2,0 );
