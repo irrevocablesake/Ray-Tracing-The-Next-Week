@@ -362,9 +362,36 @@ void simpleBoxMesh(){
     renderer.render();
 }
 
+void perlinNoise() {
+  const int IMAGE_WIDTH = 500;
+    const double ASPECT_RATIO = 1.0;
+    Image image( IMAGE_WIDTH, ASPECT_RATIO );
+
+    World world;
+
+    auto texture = make_shared< PerlinTexture >( 1, 1, 1, Color3( 1.0, 1.0, 1.0 ), Color3( 0.0, 0.0, 0.0 ) );
+    world.add(make_shared<Sphere>(Point3(0,-1000,0), 1000, make_shared<Diffuse>( texture )));
+
+    Renderer renderer( world, image );
+
+    renderer.samplesPerPixel = 30;
+    renderer.maxDepth = 15;
+    renderer.vFOV = 20.0;
+    renderer.lookFrom = Point3( 26, 3, 6 );
+    renderer.lookAt = Point3( 0,2,0 );
+    renderer.vUp = Vector3( 0, 1, 0 );
+    renderer.background = Color3( 1.0, 1.0, 1.0 );
+
+    renderer.defocusAngle = 0;
+    renderer.focusDistance = 10.0;
+
+    renderer.initialize();
+    renderer.render();
+}
+
 int main(){
     
-    int scene = 8;
+    int scene = 9;
 
     switch( scene ){
         case 1: classicScene();  break;
@@ -375,6 +402,7 @@ int main(){
         case 6: emptyCornellBox(); break;
         case 7: dualLightemptyCornellBox(); break;
         case 8: simpleBoxMesh(); break;
+        case 9: perlinNoise(); break;
     }
     
     return 0;

@@ -5,6 +5,7 @@
 #include "Point3.h"
 #include "./ImageLoader/ImageLoader.h"
 #include "Interval.h"
+#include "Perlin.h"
 
 #include<memory>
 #include<cmath>
@@ -72,6 +73,27 @@ class ImageTexture : public Texture {
 
     private:
         ImageLoader image;
+};
+
+class PerlinTexture : public Texture {
+    public:
+        PerlinTexture( double scale, double turbulence, double distortion, Color3 veinColor, Color3 surfaceColor ) : scale( scale ), turbulence( turbulence ), distortion( distortion ), veinColor( veinColor ), surfaceColor( surfaceColor ) { }
+
+        Color3 value( double u, double v, const Point3 &point ) const override {
+            double s = scale * point.z() + distortion * perlinNoise.turbulence( point, turbulence );
+            double t = 0.5 * ( 1 + std::sin( s ) );
+
+            return ( 1 - t ) * veinColor + t * surfaceColor;
+        }
+
+    private:
+        Perlin perlinNoise;
+        double scale;
+        double turbulence;
+        double distortion;
+
+        Color3 veinColor;
+        Color3 surfaceColor;
 };
 
 #endif
